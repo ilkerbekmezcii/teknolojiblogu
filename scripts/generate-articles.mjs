@@ -106,83 +106,122 @@ function detectCategory(title, desc) {
 }
 
 // ========== OZGUN TURKCE BASLIK URETIMI ==========
+// NOT: Turkce ek sorunlarindan kacmak icin "-den", "-dan" gibi
+// eylem gerektiren kaliplar YOK. "için", "-iyor", "konusunda"
+// gibi ek gerektirmeyen kaliplar kullaniliyor.
 const TITLE_TEMPLATES = {
   'Yapay Zeka': [
     (e) => e ? `${e} Yapay Zeka Alanında Yeni Bir Dönem Başlatıyor` : 'Yapay Zeka Alanında Çığır Açan Gelişme',
-    (e) => e ? `${e}'den Dev Yapay Zeka Hamlesi` : 'Yapay Zeka Teknolojilerinde Büyük Adım',
+    (e) => e ? `${e} için Büyük Yapay Zeka Hamlesi` : 'Yapay Zeka Teknolojilerinde Büyük Adım',
     (e) => e ? `${e} Yapay Zeka Stratejisini Açıkladı` : 'Yeni Nesil Yapay Zeka Modeli Tanıtıldı',
-    (e) => e ? `${e} Yapay Zeka Yarışında Öne Geçiyor` : 'Yapay Zeka Sektöründe Rekabet Kızışıyor'
+    (e) => e ? `${e} Yapay Zeka Yarışında Öne Geçiyor` : 'Yapay Zeka Sektöründe Rekabet Kızışıyor',
+    (e) => e ? `${e} ile Yapay Zeka Çözümleri Güçleniyor` : 'Derin Öğrenme ve Yapay Zeka Gelişmeleri'
   ],
   'Donanim': [
-    (e) => e ? `${e}'den Yeni Nesil Donanım Hamlesi` : 'Donanım Dünyasında Devrim Niteliğinde Yenilik',
+    (e) => e ? `${e} için Yeni Nesil Donanım Hamlesi` : 'Donanım Dünyasında Devrim Niteliğinde Yenilik',
     (e) => e ? `${e} Yeni İşlemci Mimarisiyle Geliyor` : 'Yeni Nesil İşlemciler Performans Rekoru Kırıyor',
-    (e) => e ? `${e}'den Beklenen Donanım Duyurusu` : 'Donanım Teknolojilerinde Çığır Açan Gelişme'
+    (e) => e ? `${e} Donanımda Çığır Açıyor` : 'Donanım Teknolojilerinde Çığır Açan Gelişme',
+    (e) => e ? `${e} Yeni Donanım Teknolojisini Tanıttı` : 'Bilgisayar Donanımlarında Yeni Dönem'
   ],
   'Frontend': [
     (e) => e ? `${e} Web Teknolojilerinde Devrim Yapıyor` : 'Web Geliştirme Araçlarında Büyük Yenilik',
-    (e) => e ? `${e}'den Frontend Geliştiricilere Müjde` : 'Frontend Dünyasında Çığır Açan Gelişme',
-    (e) => e ? `${e} Yeni Web Teknolojisini Duyurdu` : 'Modern Web Uygulamalarında Yeni Dönem'
+    (e) => e ? `${e} ile Frontend Geliştirme Kolaylaşıyor` : 'Frontend Dünyasında Çığır Açan Gelişme',
+    (e) => e ? `${e} Yeni Web Teknolojisini Duyurdu` : 'Modern Web Uygulamalarında Yeni Dönem',
+    (e) => e ? `${e} Geliştirici Araçlarını Yeniliyor` : 'CSS ve JavaScript Dünyasında Yenilikler'
   ],
   'Backend': [
     (e) => e ? `${e} Backend Teknolojilerinde Yeni Bir Sayfa Açıyor` : 'Sunucu Teknolojilerinde Büyük Yenilik',
-    (e) => e ? `${e}'den Geliştiricilere Yeni Araç` : 'Backend Geliştirme Araçlarında Devrim',
-    (e) => e ? `${e} Altyapı Teknolojilerini Yeniliyor` : 'Ölçeklenebilir Backend Çözümlerinde Yeni Dönem'
+    (e) => e ? `${e} ile Geliştiricilere Yeni Araç` : 'Backend Geliştirme Araçlarında Devrim',
+    (e) => e ? `${e} Altyapı Teknolojilerini Yeniliyor` : 'Ölçeklenebilir Backend Çözümlerinde Yeni Dönem',
+    (e) => e ? `${e} Performans ve Güvenlik Güncellemesi Yayınladı` : 'API ve Mikroservis Teknolojileri Gelişiyor'
   ],
   'Guvenlik': [
     (e) => e ? `${e} Güvenlik Açığı İçin Harekete Geçti` : 'Siber Güvenlik Alanında Kritik Gelişme',
-    (e) => e ? `${e}'den Yeni Güvenlik Önlemi` : 'Veri Güvenliği İçin Yeni Nesil Çözüm',
-    (e) => e ? `${e} Siber Güvenlik Stratejisini Açıkladı` : 'Siber Tehditlere Karşı Yeni Savunma Mekanizması'
+    (e) => e ? `${e} ile İlgili Yeni Güvenlik Önlemi` : 'Veri Güvenliği İçin Yeni Nesil Çözüm',
+    (e) => e ? `${e} Siber Güvenlik Stratejisini Açıkladı` : 'Siber Tehditlere Karşı Yeni Savunma Mekanizması',
+    (e) => e ? `${e} Kullanıcılarını Güvenlik Güncellemesine Çağırdı` : 'Güvenlik Araştırmalarında Büyük Gelişme',
+    (e) => e ? `${e} Platformunda Kritik Güvenlik Yamaları` : 'Kişisel Verilerin Korunması İçin Yeni Adım'
   ],
   'Mobil': [
-    (e) => e ? `${e}'den Yeni Mobil Cihaz Hamlesi` : 'Mobil Teknolojilerde Yeni Bir Dönem',
-    (e) => e ? `${e} Akıllı Telefon Pazarını Sarsıyor` : 'Akıllı Telefonlarda Çığır Açan Yenilik',
-    (e) => e ? `${e} Yeni Mobil Özelliklerini Tanıttı` : 'Mobil Kullanıcı Deneyiminde Büyük Adım'
+    (e) => e ? `${e} Mobil Cihazlar İçin Yeni Özellikler Sunuyor` : 'Mobil Teknolojilerde Yeni Bir Dönem',
+    (e) => e ? `${e} Akıllı Telefon Pazarında Fark Yaratıyor` : 'Akıllı Telefonlarda Çığır Açan Yenilik',
+    (e) => e ? `${e} Yeni Mobil Teknolojilerini Tanıttı` : 'Mobil Kullanıcı Deneyiminde Büyük Adım',
+    (e) => e ? `${e} Mobil Yazılımını Büyük Güncelleme` : 'Taşınabilir Teknolojilerde Yeni Trendler'
   ],
   'Cloud': [
     (e) => e ? `${e} Bulut Altyapısını Büyütüyor` : 'Bulut Bilişimde Rekabet Kızışıyor',
-    (e) => e ? `${e}'den Yeni Bulut Hizmeti` : 'Kurumsal Bulut Çözümlerinde Yeni Dönem',
-    (e) => e ? `${e} Veri Merkezi Yatırımlarını Artırıyor` : 'Bulut Teknolojilerinde Dev Yatırım'
+    (e) => e ? `${e} ile Yeni Bulut Çözümleri` : 'Kurumsal Bulut Çözümlerinde Yeni Dönem',
+    (e) => e ? `${e} Veri Merkezi Yatırımlarını Artırıyor` : 'Bulut Teknolojilerinde Dev Yatırım',
+    (e) => e ? `${e} Hibrit Bulut Çözümlerini Duyurdu` : 'Sunucusuz Mimari ve Bulut Güvenliği'
   ],
   'Bilim': [
     (e) => e ? `${e} Bilim Dünyasında Heyecan Yarattı` : 'Bilim İnsanlarından Çığır Açan Keşif',
     (e) => e ? `${e} Araştırmasıyla Geleceğe Işık Tutuyor` : 'Teknolojinin Bilimle Buluştuğu Nokta',
-    (e) => e ? `${e}'den Bilimsel Atılım` : 'Bilim ve Teknoloji Alanında Büyük Adım'
+    (e) => e ? `${e} ile İlgili Bilimsel Atılım` : 'Bilim ve Teknoloji Alanında Büyük Adım',
+    (e) => e ? `${e} Araştırma Projesinde Büyük Başarı` : 'Uzay ve Kuantum Teknolojilerinde Gelişmeler'
   ],
   'Startup': [
-    (e) => e ? `${e} Girişim Sermayesi Yatırımı Aldı` : 'Girişim Dünyasında Sıcak Gelişme',
-    (e) => e ? `${e}'den Milyar Dolarlık Yatırım Turu` : 'Startup Ekosisteminde Rekor Yatırım',
-    (e) => e ? `${e} Büyümesini Hızlandırıyor` : 'Teknoloji Girişimlerinde Yeni Başarı Hikayesi'
+    (e) => e ? `${e} Büyük Yatırım Aldı` : 'Girişim Dünyasında Sıcak Gelişme',
+    (e) => e ? `${e} için Milyar Dolarlık Yatırım Turu` : 'Startup Ekosisteminde Rekor Yatırım',
+    (e) => e ? `${e} Büyümesini Hızlandırıyor` : 'Teknoloji Girişimlerinde Yeni Başarı Hikayesi',
+    (e) => e ? `${e} Yeni Pazara Giriş Yapıyor` : 'Girişim Sermayesi ve Teknoloji Yatırımları'
   ],
   'Ulasim': [
     (e) => e ? `${e} Elektrikli Araç Pazarında Fark Yaratıyor` : 'Elektrikli Araç Teknolojilerinde Devrim',
-    (e) => e ? `${e}'den Otonom Sürüş Hamlesi` : 'Sürücüsüz Araç Teknolojilerinde Büyük Adım',
-    (e) => e ? `${e} Ulaşım Vizyonunu Açıkladı` : 'Geleceğin Ulaşım Teknolojileri Şekilleniyor'
+    (e) => e ? `${e} ile Otonom Sürüş Teknolojileri` : 'Sürücüsüz Araç Teknolojilerinde Büyük Adım',
+    (e) => e ? `${e} Ulaşım Vizyonunu Açıkladı` : 'Geleceğin Ulaşım Teknolojileri Şekilleniyor',
+    (e) => e ? `${e} Şarj Altyapısını Genişletiyor` : 'Elektrikli Araç Şarj Teknolojilerinde Gelişme'
   ],
   'Isletim Sistemi': [
     (e) => e ? `${e} İşletim Sisteminde Büyük Güncelleme` : 'Yeni Nesil İşletim Sistemi Özellikleri',
-    (e) => e ? `${e}'den Kullanıcı Deneyimi Hamlesi` : 'İşletim Sistemlerinde Performans Devrimi',
-    (e) => e ? `${e} Platformunu Güncelliyor` : 'Güvenlik ve Verimlilik Odaklı Sistem Güncellemesi'
+    (e) => e ? `${e} ile Kullanıcı Deneyimi Hamlesi` : 'İşletim Sistemlerinde Performans Devrimi',
+    (e) => e ? `${e} Platformunu Güncelliyor` : 'Güvenlik ve Verimlilik Odaklı Sistem Güncellemesi',
+    (e) => e ? `${e} için Yama ve Güvenlik Güncellemesi` : 'Açık Kaynak İşletim Sistemleri Yükselişte'
   ],
   'Web3': [
     (e) => e ? `${e} Blokzincir Dünyasında Ses Getiriyor` : 'Kripto Para ve Blokzincirde Yeni Dönem',
-    (e) => e ? `${e}'den Merkeziyetsiz Finans Hamlesi` : 'Web3 Teknolojilerinde Çığır Açan Gelişme',
-    (e) => e ? `${e} Kripto Stratejisini Açıkladı` : 'Dijital Varlıklar ve Blokzincir Ekosistemi'
+    (e) => e ? `${e} ile Merkeziyetsiz Finans Çözümleri` : 'Web3 Teknolojilerinde Çığır Açan Gelişme',
+    (e) => e ? `${e} Kripto Stratejisini Açıkladı` : 'Dijital Varlıklar ve Blokzincir Ekosistemi',
+    (e) => e ? `${e} NFT ve Dijital Varlık Platformunu Duyurdu` : 'Merkeziyetsiz Uygulamalar Yaygınlaşıyor'
   ],
   'Oyun': [
     (e) => e ? `${e} Oyun Dünyasında Büyük Yankı Uyandırdı` : 'Oyun Teknolojilerinde Yeni Dönem Başlıyor',
-    (e) => e ? `${e}'den Oyunseverlere Müjde` : 'Yeni Nesil Oyun Deneyimi Kapıda',
-    (e) => e ? `${e} Oyun Motorunu Güncelliyor` : 'Oyun Grafiklerinde Çığır Açan Yenilik'
+    (e) => e ? `${e} ile Oyunseverlere Müjde` : 'Yeni Nesil Oyun Deneyimi Kapıda',
+    (e) => e ? `${e} Oyun Motorunu Güncelliyor` : 'Oyun Grafiklerinde Çığır Açan Yenilik',
+    (e) => e ? `${e} Yeni Oyun ve Platform Duyurusu` : 'VR ve AR Oyun Teknolojileri Gelişiyor'
   ],
   'Teknoloji': [
     (e) => e ? `${e} Teknoloji Dünyasında Fark Yaratıyor` : 'Teknoloji Haberlerinde Sıcak Gelişme',
-    (e) => e ? `${e}'den Yenilikçi Teknoloji Hamlesi` : 'Yeni Teknoloji Trendleri ve Gelişmeler',
-    (e) => e ? `${e} Sektörde Çığır Açıyor` : 'Teknoloji Sektöründe Önemli Gelişme'
+    (e) => e ? `${e} ile İlgili Yenilikçi Teknoloji` : 'Yeni Teknoloji Trendleri ve Gelişmeler',
+    (e) => e ? `${e} Sektörde Çığır Açıyor` : 'Teknoloji Sektöründe Önemli Gelişme',
+    (e) => e ? `${e} Teknoloji Vizyonunu Paylaştı` : 'Dijital Dönüşüm ve Teknoloji Haberleri',
+    (e) => e ? `${e} Yeni Nesil Teknoloji Çözümleri Üzerinde Çalışıyor` : 'Geleceğin Teknolojileri Şekilleniyor'
   ]
 };
 
+// Her calistirmada ayni kalibin tekrarlanmasini engelle
+// icin, karistirilmis indeks havuzundan secim yap
+let _titleIndexPool = {};
+
 function generateTitle(entity, category) {
   const templates = TITLE_TEMPLATES[category] || TITLE_TEMPLATES['Teknoloji'];
-  const template = templates[Math.floor(Math.random() * templates.length)];
+  // Her kategori icin karistirilmis indeks havuzu olustur
+  if (!_titleIndexPool[category]) {
+    const indices = Array.from({ length: templates.length }, (_, i) => i);
+    // Fisher-Yates shuffle
+    for (let i = indices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+    _titleIndexPool[category] = indices;
+  }
+  // Havuzdan siradaki indeksi al
+  const idx = _titleIndexPool[category].shift();
+  // Havuz bosaldiysa yeniden olustur (bir sonraki calistirma icin)
+  if (_titleIndexPool[category].length === 0) {
+    delete _titleIndexPool[category];
+  }
+  const template = templates[idx];
   return template(entity || null);
 }
 
@@ -238,16 +277,26 @@ Backend teknolojilerindeki bu gelişmeler, özellikle büyük ölçekli uygulama
 Yeni sürümle birlikte gelen güvenlik yamaları ve performans iyileştirmeleri, üretim ortamlarında önemli avantajlar sağlıyor. Geliştirici verimliliğinin artması ve hata oranlarının düşmesi bekleniyor.`
   ],
   'Guvenlik': [
-    (t) => `Siber güvenlik alanında önemli bir gelişme: ${t}. Uzmanlar, bu gelişmenin kurumlar ve bireyler için dikkate alınması gereken bir durum olduğunu vurguluyor.
+    (t) => `Siber güvenlik alanında önemli bir gelişme yaşandı. ${t} konusu, güvenlik uzmanları tarafından yakından takip ediliyor. Uzmanlar, bu gelişmenin kurumlar ve bireyler için dikkate alınması gerektiğini vurguluyor.
 
 Siber tehditler her geçen gün daha da karmaşık hale gelirken, güvenlik uzmanları da savunma mekanizmalarını sürekli olarak güncelliyor. Yeni nesil güvenlik çözümleri, yapay zeka desteğiyle tehditleri henüz oluşmadan tespit edebiliyor.
 
 Güvenlik uzmanları, bireysel kullanıcıların da şifre yönetimi, iki faktörlü kimlik doğrulama ve düzenli yedekleme gibi temel güvenlik önlemlerini almalarını tavsiye ediyor. Kurumlar ise siber güvenlik bütçelerini her yıl artırıyor.`,
-    (t) => `${t} siber güvenlik alanında çalışanlar tarafından yakından takip ediliyor. Dijital dünyadaki tehditler giderek çeşitlenirken, korunma yöntemleri de aynı hızla gelişiyor.
+    (t) => `${t} ile ilgili son gelişmeler siber güvenlik dünyasında geniş yankı uyandırdı. Dijital tehditler giderek çeşitlenirken, korunma yöntemleri de aynı hızla gelişiyor.
 
 Yapılan araştırmalar, yapay zeka destekli saldırıların arttığını gösteriyor. Bu nedenle şirketler, güvenlik altyapılarını yapay zeka tabanlı çözümlerle güçlendirmeye yöneliyor.
 
-Uzmanlara göre, 2026 yılında şirketlerin karşılaştığı en büyük tehditler arasında fidye yazılımları ve sosyal mühendislik saldırıları başı çekiyor. Veri ihlallerinin maliyeti her geçen yıl artarken, sigorta şirketleri de siber güvenlik politikalarını sıkılaştırıyor.`
+Uzmanlara göre, 2026 yılında şirketlerin karşılaştığı en büyük tehditler arasında fidye yazılımları ve sosyal mühendislik saldırıları başı çekiyor. Veri ihlallerinin maliyeti her geçen yıl artarken, sigorta şirketleri de siber güvenlik politikalarını sıkılaştırıyor.`,
+    (t) => `Güvenlik araştırmacıları ${t} konusunda önemli bulgular elde etti. Siber saldırıların karmaşıklığı her geçen gün artarken, güvenlik firmaları da yeni nesil koruma çözümleri geliştiriyor.
+
+Kurumlar, siber güvenlik alanında farkındalığı artırmak ve çalışanlarını bilinçlendirmek için eğitim programları düzenliyor. Özellikle sosyal mühendislik saldırılarına karşı dikkatli olunması gerektiği vurgulanıyor.
+
+Veri koruma yasalarının sıkılaştığı bu dönemde, şirketlerin güvenlik ihlallerine karşı hazırlıklı olması büyük önem taşıyor. Düzenli güvenlik denetimleri ve sızma testleri, olası açıkların tespitinde kritik rol oynuyor.`,
+    (t) => `${t} başlıklı güvenlik duyurusu, sektörde dikkatle takip ediliyor. Güvenlik açıklarının hızla kapatılması, kurumların siber dayanıklılığı açısından kritik önem taşıyor.
+
+Yapay zeka tabanlı güvenlik çözümleri, anomali tespitinde geleneksel yöntemlere göre çok daha başarılı sonuçlar veriyor. Makine öğrenimi modelleri, normal ağ trafiğini öğrenerek şüpheli aktiviteleri gerçek zamanlı olarak tespit edebiliyor.
+
+Siber güvenlik alanında uzmanlaşmış insan kaynağı ihtiyacı her geçen gün artarken, üniversiteler de bu alandaki programlarını genişletiyor.`
   ],
   'Mobil': [
     (t) => `${t} mobil teknoloji dünyasında merakla karşılandı. Mobil cihazlar ve uygulamalar hayatımızın vazgeçilmez bir parçası haline gelirken, bu alandaki yenilikler de hız kesmeden devam ediyor.
@@ -391,9 +440,24 @@ function generateOriginalTitle(entity, category) {
   return template(entity || null);
 }
 
+// Her calistirmada ayni icerik kalibinin tekrarlanmasini engelle
+let _contentIndexPool = {};
+
 function generateContent(originalTitle, category) {
   const templates = CONTENT_TEMPLATES[category] || DEFAULT_CONTENT_TEMPLATES;
-  const template = templates[Math.floor(Math.random() * templates.length)];
+  if (!_contentIndexPool[category]) {
+    const indices = Array.from({ length: templates.length }, (_, i) => i);
+    for (let i = indices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+    _contentIndexPool[category] = indices;
+  }
+  const idx = _contentIndexPool[category].shift();
+  if (_contentIndexPool[category].length === 0) {
+    delete _contentIndexPool[category];
+  }
+  const template = templates[idx];
   return template(originalTitle);
 }
 
