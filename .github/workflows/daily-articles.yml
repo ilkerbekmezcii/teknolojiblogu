@@ -21,14 +21,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🔧 Node.js kurulumu
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'npm'
-
-      - name: 📦 Bağımlılıkları yükle
-        run: npm ci --ignore-scripts 2>/dev/null || true
+      - name: 🔧 Node.js'i kontrol et
+        run: node --version
 
       - name: 🤖 Makaleleri oluştur
         run: node scripts/generate-articles.mjs
