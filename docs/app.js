@@ -175,10 +175,68 @@ const SAMPLE_ARTICLES = [
         publishedAt: new Date(Date.now() - 80 * 3600000).toISOString(),
         author: "İlker Bekmezci",
         content: "Flutter 5.0, Google'ın çapraz platform geliştirme framework'ünün şimdiye kadarki en kapsamlı güncellemesi olarak karşımıza çıkıyor. Bu sürümle birlikte Flutter, artık sadece mobil uygulama değil, aynı zamanda web ve masaüstü uygulamaları için de gerçek bir alternatif haline geliyor.\n\nEn önemli yenilik, 'Implicit Animations' sisteminin tamamen yenilenmesi. Geliştiriciler artık herhangi bir animasyon kodu yazmadan, sadece widget ağacında bildirim yaparak karmaşık animasyonlar oluşturabiliyor. Ayrıca, Dart 4 dil desteğiyle birlikte pattern matching ve null safety iyileştirmeleri de geliyor.\n\nWeb desteği de önemli ölçüde gelişmiş. Flutter 5.0 ile oluşturulan web uygulamaları, artık WASM (WebAssembly) desteği sayesinde native performansa yakın bir hızda çalışıyor. SEO desteği ve erişilebilirlik özellikleri de bu sürümle birlikte olgunlaşmış durumda."
+    },
+    {
+        _id: "17",
+        title: "Twenty One Zero-Days in FFmpeg",
+        description: "Article URL: https://depthfirst.com/research/21-zero-days-in-ffmpeg Comments URL: https://news.ycombinator.com/item?id=48510046 Points: 12 # Comments: 3",
+        category: "Bilim",
+        imageUrl: "https://source.unsplash.com/400x250/?technology&1781306371011",
+        views: 0, likes: 0,
+        publishedAt: new Date(Date.now() - 53743568).toISOString(),
+        author: "Ilker Bekmezci",
+        content: `Article URL: https://depthfirst.com/research/21-zero-days-in-ffmpeg\nComments URL: https://news.ycombinator.com/item?id=48510046\nPoints: 12\n# Comments: 3`
+    },
+    {
+        _id: "18",
+        title: "Renault: Electric motors with no rare earths",
+        description: "Article URL: https://www.renaultgroup.com/en/magazine/energy-and-powertrains/all-about-electric-motors-with-no-rare-earths/ Comments URL: https://news.ycombinator.com/item?id=48510010 Points: 20 # ...",
+        category: "Yapay Zeka",
+        imageUrl: "https://source.unsplash.com/400x250/?cyber&1781306371011",
+        views: 0, likes: 0,
+        publishedAt: new Date(Date.now() - 39723449).toISOString(),
+        author: "Ilker Bekmezci",
+        content: `Article URL: https://www.renaultgroup.com/en/magazine/energy-and-powertrains/all-about-electric-motors-with-no-rare-earths/\nComments URL: https://news.ycombinator.com/item?id=48510010\nPoints: 20\n# ...`
+    },
+    {
+        _id: "19",
+        title: "Palantir loses legal challenge against Swiss investigative magazine",
+        description: "Article URL: https://www.ft.com/content/7ffcace7-9dc0-4e7e-9912-895ac073f979 Comments URL: https://news.ycombinator.com/item?id=48509182 Points: 115 # Comments: 21",
+        category: "Yapay Zeka",
+        imageUrl: "https://source.unsplash.com/400x250/?data&1781306371011",
+        views: 0, likes: 0,
+        publishedAt: new Date(Date.now() - 32645508).toISOString(),
+        author: "Ilker Bekmezci",
+        content: `Article URL: https://www.ft.com/content/7ffcace7-9dc0-4e7e-9912-895ac073f979\nComments URL: https://news.ycombinator.com/item?id=48509182\nPoints: 115\n# Comments: 21`
+    },
+    {
+        _id: "20",
+        title: "Mmorpg World of ClaudeCraft, vibe coded with Fable 5",
+        description: "Article URL: https://worldofclaudecraft.com/ Comments URL: https://news.ycombinator.com/item?id=48509143 Points: 73 # Comments: 66",
+        category: "Yapay Zeka",
+        imageUrl: "https://source.unsplash.com/400x250/?server&1781306371011",
+        views: 0, likes: 0,
+        publishedAt: new Date(Date.now() - 48689839).toISOString(),
+        author: "Ilker Bekmezci",
+        content: `Article URL: https://worldofclaudecraft.com/\nComments URL: https://news.ycombinator.com/item?id=48509143\nPoints: 73\n# Comments: 66`
+    },
+    {
+        _id: "21",
+        title: "/architect: Reduce Fable tokens by 80%, Fable orchestrates/reviews, Codex builds",
+        description: "Article URL: https://github.com/DanMcInerney/architect-loop Comments URL: https://news.ycombinator.com/item?id=48509133 Points: 6 # Comments: 0",
+        category: "Frontend",
+        imageUrl: "https://source.unsplash.com/400x250/?robot&1781306371011",
+        views: 0, likes: 0,
+        publishedAt: new Date(Date.now() - 55646747).toISOString(),
+        author: "Ilker Bekmezci",
+        content: `Article URL: https://github.com/DanMcInerney/architect-loop\nComments URL: https://news.ycombinator.com/item?id=48509133\nPoints: 6\n# Comments: 0`
     }
+
 ];
 
-const SAMPLE_CATEGORIES = ["Yapay Zeka", "Donanım", "Frontend", "Bilim", "Güvenlik", "Backend", "Mobil", "Cloud", "Yazılım", "Ulaşım", "İşletim Sistemi"];
+const SAMPLE_CATEGORIES = [
+    "Backend", "Bilim", "Cloud", "Donanım", "Frontend", "Güvenlik", "Mobil", "Ulaşım", "Yapay Zeka", "Yazılım", "İşletim Sistemi"
+];
 
 let currentPage = 1;
 let currentCategory = 'all';
