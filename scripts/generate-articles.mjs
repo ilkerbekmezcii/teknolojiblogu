@@ -604,66 +604,37 @@ async function mergeWithLiveArticles(existing) {
     
     // Canli sitedeki ID'leri bul
     const liveIds = [];
-    const idRegex = /_id:\s*"(\d+)"/g;
-    let m;
-    while ((m = idRegex.exec(liveContent)) !== null) liveIds.push(parseInt(m[1]));
+    let pos = 0;
+    const searchStr = '_id: "';
+    while ((pos = liveContent.indexOf(searchStr, pos)) !== -1) {
+      pos += searchStr.length;
+      const endPos = liveContent.indexOf('"', pos);
+      if (endPos !== -1) {
+        const id = parseInt(liveContent.substring(pos, endPos));
+        if (!isNaN(id)) liveIds.push(id);
+        pos = endPos + 1;
+      } else break;
+    }
+    console.log('Canli sitede:', liveIds.length, 'makale');
     
     const localIds = new Set(existing.ids);
     const newFromLive = liveIds.filter(id => !localIds.has(id));
     
     if (newFromLive.length === 0) {
-      console.log('Canli sitede yeni makale yok, mevcut:', existing.ids.length);
+      console.log('Canli sitede yeni makale yok, eskiyen:', localIds.size);
       return existing;
     }
     
-    // Canli sitedeki makaleleri ayristir ve ekle
-    // Blok blok parse edelim
-    const blocks = [];
-    let depth = 0, current = '';
-    const arrayContent = liveContent.substring(
-      liveContent.indexOf('const SAMPLE_ARTICLES = [') + 'const SAMPLE_ARTICLES = ['.length,
-      liveContent.indexOf('];\n\nconst SAMPLE_CATEGORIES')
-    ).trim();
+    console.log('Canli siteden', newFromLive.length, 'yeni makale biriktiriliyor...');
     
-    for (const ch of arrayContent) {
-      if (ch === '{') depth++;
-      if (ch === '}') depth--;
-      current += ch;
-      if (depth === 0 && current.trim().startsWith('{') && current.trim().endsWith('}')) {
-        blocks.push(current.trim());
-        current = '';
-      }
-    }
+    // Canli site dosyasini local dosyaya YAZ (overwrite)
+    // Boylece onceki calistirmalardaki makaleler korunur
+    fs.writeFileSync(APP_JS_PATH, liveContent, 'utf-8');
     
-    // Sadece localde olmayanlari ekle
-    const toAdd = blocks.filter(b => {
-      const idMatch = b.match(/_id:\s*"(\d+)"/);
-      return idMatch && !localIds.has(parseInt(idMatch[1]));
-    });
-    
-    if (toAdd.length === 0) {
-      console.log('Canli siteden eklenecek yeni makale yok');
-      return existing;
-    }
-    
-    console.log('Canli siteden', toAdd.length, 'makale bulundu, birikiyor...');
-    
-    // Local dosyaya bu bloklari ekle
-    const raw = existing.raw;
-    const content = existing.content;
-    const endIdx = existing.endIdx;
-    const nl = raw.includes('\r\n') ? '\r\n' : '\n';
-    const sep = ',' + nl;
-    const beforeEnd = content.substring(0, endIdx);
-    const afterEnd = content.substring(endIdx);
-    const lastBrace = beforeEnd.lastIndexOf('}');
-    const updated = beforeEnd.substring(0, lastBrace + 1) + sep + toAdd.join(sep) + nl + beforeEnd.substring(lastBrace + 1);
-    const result = updated + afterEnd;
-    const final = raw.includes('\r\n') ? result.replace(/\n(?!\r)/g, '\r\n') : result;
-    fs.writeFileSync(APP_JS_PATH, final, 'utf-8');
-    
-    // Yeniden oku
-    return readExistingArticles();
+    // Yeniden oku (artik canli sitedeki tum makaleler local'de)
+    const merged = readExistingArticles();
+    console.log('Birlestirilmis makale:', merged.ids.length);
+    return merged;
   } catch (e) {
     console.log('Canli siteye erisilemedi:', e.message);
     return existing;

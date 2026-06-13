@@ -237,9 +237,7 @@ function loadArticles() {
                 <span class="article-category">${article.category}</span>
                 <h3 class="article-title">${article.title}</h3>
                 <p class="article-description">${article.description}</p>
-                <div class="article-meta">
-                    <span class="article-date">${new Date(article.publishedAt).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                </div>
+                <div class="article-meta"></div>
             </div>
         </div>
     `).join('');
