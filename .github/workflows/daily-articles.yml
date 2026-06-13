@@ -27,11 +27,21 @@ jobs:
         run: |
           mkdir -p docs scripts
           BASE="https://api.github.com/repos/ilkerbekmezcii/teknolojiblogu-backend/contents"
+
+          # Static dosyalar ve script
           for f in docs/index.html docs/styles.css scripts/generate-articles.mjs; do
             curl -sL -H "Authorization: token $TOKEN" \
               -H "Accept: application/vnd.github.raw+json" \
               "$BASE/$f" -o "$f"
           done
+
+          # app.js: once canli siteden, yoksa ozel repodan
+          curl -sL "https://ilkerbekmezcii.github.io/teknolojiblogu/app.js" -o docs/app.js
+          if [ ! -s docs/app.js ]; then
+            curl -sL -H "Authorization: token $TOKEN" \
+              -H "Accept: application/vnd.github.raw+json" \
+              "$BASE/docs/app.js" -o docs/app.js
+          fi
 
       - run: node scripts/generate-articles.mjs
 
