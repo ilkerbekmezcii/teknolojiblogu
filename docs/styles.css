@@ -128,10 +128,15 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.9em;
+    font-size: 0.85em;
     color: #999;
     border-top: 1px solid #f0f0f0;
     padding-top: 10px;
+}
+
+.article-date {
+    color: #aaa;
+    font-size: 0.9em;
 }
 
 .article-source {
