@@ -590,6 +590,86 @@ function updateCategories() {
   console.log('Kategoriler guncellendi:', list.length);
 }
 
+// ========== CANLI SITEDEKINI ALAK ==========
+// Workflow her seferinde main branch'ten basladigi icin
+// onceki calistirmada eklenen makaleler kaybolur.
+// Bu fonksiyon canli siteyi cekip birikimli makale sayisini korur.
+const LIVE_SITE_URL = 'https://ilkerbekmezcii.github.io/teknolojiblogu/app.js';
+
+async function mergeWithLiveArticles(existing) {
+  try {
+    const res = await fetch(LIVE_SITE_URL, { signal: AbortSignal.timeout(5000) });
+    if (!res.ok) return existing;
+    const liveContent = await res.text();
+    
+    // Canli sitedeki ID'leri bul
+    const liveIds = [];
+    const idRegex = /_id:\s*"(\d+)"/g;
+    let m;
+    while ((m = idRegex.exec(liveContent)) !== null) liveIds.push(parseInt(m[1]));
+    
+    const localIds = new Set(existing.ids);
+    const newFromLive = liveIds.filter(id => !localIds.has(id));
+    
+    if (newFromLive.length === 0) {
+      console.log('Canli sitede yeni makale yok, mevcut:', existing.ids.length);
+      return existing;
+    }
+    
+    // Canli sitedeki makaleleri ayristir ve ekle
+    // Blok blok parse edelim
+    const blocks = [];
+    let depth = 0, current = '';
+    const arrayContent = liveContent.substring(
+      liveContent.indexOf('const SAMPLE_ARTICLES = [') + 'const SAMPLE_ARTICLES = ['.length,
+      liveContent.indexOf('];\n\nconst SAMPLE_CATEGORIES')
+    ).trim();
+    
+    for (const ch of arrayContent) {
+      if (ch === '{') depth++;
+      if (ch === '}') depth--;
+      current += ch;
+      if (depth === 0 && current.trim().startsWith('{') && current.trim().endsWith('}')) {
+        blocks.push(current.trim());
+        current = '';
+      }
+    }
+    
+    // Sadece localde olmayanlari ekle
+    const toAdd = blocks.filter(b => {
+      const idMatch = b.match(/_id:\s*"(\d+)"/);
+      return idMatch && !localIds.has(parseInt(idMatch[1]));
+    });
+    
+    if (toAdd.length === 0) {
+      console.log('Canli siteden eklenecek yeni makale yok');
+      return existing;
+    }
+    
+    console.log('Canli siteden', toAdd.length, 'makale bulundu, birikiyor...');
+    
+    // Local dosyaya bu bloklari ekle
+    const raw = existing.raw;
+    const content = existing.content;
+    const endIdx = existing.endIdx;
+    const nl = raw.includes('\r\n') ? '\r\n' : '\n';
+    const sep = ',' + nl;
+    const beforeEnd = content.substring(0, endIdx);
+    const afterEnd = content.substring(endIdx);
+    const lastBrace = beforeEnd.lastIndexOf('}');
+    const updated = beforeEnd.substring(0, lastBrace + 1) + sep + toAdd.join(sep) + nl + beforeEnd.substring(lastBrace + 1);
+    const result = updated + afterEnd;
+    const final = raw.includes('\r\n') ? result.replace(/\n(?!\r)/g, '\r\n') : result;
+    fs.writeFileSync(APP_JS_PATH, final, 'utf-8');
+    
+    // Yeniden oku
+    return readExistingArticles();
+  } catch (e) {
+    console.log('Canli siteye erisilemedi:', e.message);
+    return existing;
+  }
+}
+
 // ========== ANA AKIS ==========
 async function main() {
   console.log('Teknoloji Blogu - Telifsiz Makale Uretici');
@@ -598,7 +678,10 @@ async function main() {
   let existing;
   try {
     existing = readExistingArticles();
-    console.log('Mevcut makale:', existing.ids.length);
+    console.log('Mevcut makale (branch):', existing.ids.length);
+    // Canli siteyle birlestir (onceki calistirmalardaki makaleler)
+    existing = await mergeWithLiveArticles(existing);
+    console.log('Mevcut makale (birlestirilmis):', existing.ids.length);
   } catch (e) {
     console.error('Hata:', e.message);
     process.exit(1);
