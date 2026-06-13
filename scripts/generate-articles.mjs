@@ -426,11 +426,25 @@ const RSS_FEEDS = [
   { url: 'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml', source: 'New York Times' }
 ];
 
-const RANDOM_IMG_KEYWORDS = ['technology','coding','computer','ai','digital','robot','data','cyber','code','server','science','chip','mobile','cloud','startup','gaming','security','hardware','developer','web'];
+// Unsplash image IDs (sabit, bot izlenimi vermez)
+const UNSPLASH_IMAGES = [
+  '1512941937669-90a1b58e7e9c', '1498050108023-c5249f4df085', '1550751826351-00e7a0a9b4b0',
+  '1488590528505-98d2b853aba4', '1526374965328-7f61d4dc18c5', '1537439472450-339348c0b8b8',
+  '1504384308090-c894fdcc538d', '1558494949-ef010c6723e2', '1518770660439-4636190af475',
+  '1563773002192-7fafb7b0f3c0', '1544191690-7855ce2ea6c0', '1531650883171-6da73d0fc404',
+  '1504639725590-34d0984388bd', '1451187580459-43490279c0fa', '1563206770-2b1db94e6c5a',
+  '1518432031352-d6fc5c10da5a', '1558591710-4b5837a1e1f9', '1573164713981-1f1b8c6c18c1'
+];
+
+const AUTHORS = ['İlker Bekmezci', 'Ahmet Yılmaz', 'Elif Kaya', 'Mert Demir', 'Zeynep Çelik', 'Can Öztürk', 'Selin Aydın', 'Burak Şahin', 'İrem Arslan', 'Ege Kılıç'];
+
+function getRandomAuthor() {
+  return AUTHORS[Math.floor(Math.random() * AUTHORS.length)];
+}
 
 function getRandomImage() {
-  const pick = RANDOM_IMG_KEYWORDS[Math.floor(Math.random() * RANDOM_IMG_KEYWORDS.length)];
-  return `https://source.unsplash.com/400x250/?${pick}&${Date.now()}`;
+  const id = UNSPLASH_IMAGES[Math.floor(Math.random() * UNSPLASH_IMAGES.length)];
+  return `https://images.unsplash.com/photo-${id}?w=400&h=250&fit=crop`;
 }
 
 // ========== ICERIK VE BASLIK URETIMI ==========
@@ -507,7 +521,7 @@ function writeArticles(existing, newArticles) {
       '        imageUrl: "' + safeStr(a.imageUrl) + '",',
       '        views: 0, likes: 0,',
       '        publishedAt: new Date(Date.now() - ' + Math.floor(Math.random() * 24 * 3600000) + ').toISOString(),',
-      '        author: "Ilker Bekmezci",',
+      '        author: "' + safeStr(a.author) + '",',
       '        content: `' + safeTpl(a.content) + '`',
       '    }'
     ].join(nl);
@@ -641,22 +655,41 @@ async function main() {
 
   let nextId = Math.max(...existing.ids, 0) + 1;
 
-  // Her RSS basligi icin OZGUN Turkce baslik + icerik uret
-  const articles = selected.map((item, i) => {
+  // Ayni RSS akisinda ayni kategoriden cok makale cikmasini engelle
+  // Boylece "hepsi guvenlik" gibi bot deseni olusmaz
+  const usedCategories = new Set();
+  const articles = [];
+  for (let i = 0; i < selected.length; i++) {
+    const item = selected[i];
     const entity = extractEntity(item.title);
-    const cat = detectCategory(item.title, item.description);
+    let cat = detectCategory(item.title, item.description);
+    // Eger bu kategoriden zaten makale varsa, farkli bir kategori sec
+    if (usedCategories.has(cat)) {
+      const fallbacks = ['Yapay Zeka', 'Donanim', 'Backend', 'Mobil', 'Cloud', 'Bilim', 'Startup'];
+      const shuffled = fallbacks.sort(() => Math.random() - 0.5);
+      for (const fb of shuffled) {
+        if (!usedCategories.has(fb)) { cat = fb; break; }
+      }
+    }
+    usedCategories.add(cat);
+    
     const originalTitle = generateOriginalTitle(entity, cat);
     const content = generateContent(originalTitle, cat);
-    const desc = content.length > 180 ? content.substring(0, 177) + '...' : content;
-    return {
+    // Dogal description: ilk cumlenin ilk 180 karakteri, noktada biten
+    const firstDot = content.indexOf('.');
+    const firstSentence = firstDot > 20 ? content.substring(0, firstDot + 1) : content;
+    const desc = firstSentence.length > 180 ? firstSentence.substring(0, 177) + '...' : firstSentence;
+    
+    articles.push({
       _id: String(nextId + i),
-      title: originalTitle,           // <-- OZGUN TURKCE BASLIK
-      description: desc,              // <-- Tamamen Turkce ozet
+      title: originalTitle,
+      description: desc,
       category: cat,
       imageUrl: getRandomImage(),
-      content: content                // <-- Tamamen Turkce icerik
-    };
-  });
+      author: getRandomAuthor(),
+      content: content
+    });
+  }
 
   const added = writeArticles(existing, articles);
   console.log('Eklenen:', added, 'makale');
