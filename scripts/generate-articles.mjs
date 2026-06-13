@@ -436,10 +436,8 @@ const UNSPLASH_IMAGES = [
   '1518432031352-d6fc5c10da5a', '1558591710-4b5837a1e1f9', '1573164713981-1f1b8c6c18c1'
 ];
 
-const AUTHORS = ['İlker Bekmezci', 'Ahmet Yılmaz', 'Elif Kaya', 'Mert Demir', 'Zeynep Çelik', 'Can Öztürk', 'Selin Aydın', 'Burak Şahin', 'İrem Arslan', 'Ege Kılıç'];
-
-function getRandomAuthor() {
-  return AUTHORS[Math.floor(Math.random() * AUTHORS.length)];
+function getAuthor() {
+  return 'İlker Bekmezci';
 }
 
 function getRandomImage() {
@@ -686,7 +684,7 @@ async function main() {
       description: desc,
       category: cat,
       imageUrl: getRandomImage(),
-      author: getRandomAuthor(),
+      author: getAuthor(),
       content: content
     });
   }
